@@ -8,7 +8,6 @@ import java.util.List;
 
 @Entity(name = "USERS")
 public class User {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
