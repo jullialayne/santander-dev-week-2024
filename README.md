@@ -7,28 +7,31 @@ classDiagram
     +string name
     +string email
     +string password
+  }
+
+  class Account {
+    +int id
     +BigDecimal balance
+    +string accountType
   }
 
   class Transaction {
     +int id
     +string description
-    +BigDecimal amount
+    +BigDecimal balance
     +Date date
     +string category
-    +int userId
+    +TransactionType type
   }
 
-  class Expense {
-    +string type
+  class TransactionType {
+    <<enumeration>>
+    +EXPENSE
+    +INCOME
   }
 
-  class Income {
-    +string source
-  }
-
-  User "1" -- "0..*" Transaction : has
-  Transaction <|-- Expense
-  Transaction <|-- Income
+  User "1" -- "0..*" Account : owns
+  Account "1" -- "0..*" Transaction : has
+  Transaction --> TransactionType : type
 
 ```
