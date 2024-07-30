@@ -10,36 +10,25 @@ import java.util.List;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
     private String name;
     private String email;
     private String password;
 
-    @Column(precision = 15, scale = 2)
-    private BigDecimal balance;
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<Transaction> transactions;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Account> accounts = new ArrayList<>();
 
     public User() {
     }
 
-    public User(int id, String name, String email, String password, BigDecimal balance) {
+    public User(Long id, String name, String email, String password) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.password = password;
-        this.balance = balance;
-        this.transactions = new ArrayList<>();
+        this.accounts = new ArrayList<>();
     }
 
-    public BigDecimal getBalance() {
-        return balance;
-    }
-
-    public void setBalance(BigDecimal balance) {
-        this.balance = balance;
-    }
 
     public String getPassword() {
         return password;
@@ -65,34 +54,19 @@ public class User {
         this.name = name;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public List<Transaction> getTransactions() {
-        return transactions;
+    public List<Account> getAccounts() {
+        return accounts;
     }
 
-    public void deposit(Transaction transaction) {
-        transaction.setType(TransactionType.INCOME);
-        transactions.add(transaction);
-        transaction.setUser(this);
-        balance = balance.add(transaction.getBalance());
+    public void setAccounts(List<Account> accounts) {
+        this.accounts = accounts;
     }
-
-    public void withdraw(Transaction transaction) {
-        transaction.setType(TransactionType.EXPENSE);
-        transactions.add(transaction);
-        transaction.setUser(this);
-        balance = balance.subtract(transaction.getBalance());
-    }
-
-    public List<Transaction> getTransactionHistory() {
-        return new ArrayList<>(this.transactions);
-    }
-
 }
